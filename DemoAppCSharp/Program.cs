@@ -19,7 +19,7 @@ namespace DemoAppCSharp
             primesUnderThousand.ForEach(WriteLine);
 
             WriteLine("Press any key to exit");
-            var na = ReadLine();
+            var na = ReadKey();
         }
 
         /// <summary>
