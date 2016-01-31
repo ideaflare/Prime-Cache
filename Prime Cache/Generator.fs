@@ -1,6 +1,7 @@
 ﻿namespace PrimeCache
 
-type Generator(primes : int list) = 
+type Generator(knownPrimes : seq<int>) = 
+    let primes = List.ofSeq knownPrimes
     
     let rec isPrime test = 
         function 
