@@ -36,10 +36,20 @@ type GeneratorTests() =
     member gen.``Cached primes are more than 100x faster on sucessive calls``() = 
         let sw = System.Diagnostics.Stopwatch.StartNew()
 
-        let firstCache = initializedGenerator.GetCachedPrimes() |> takeList 1000
+        let firstCache = initializedGenerator.GetCachedPrimes() |> takeList 2000
         let firstTry = sw.ElapsedMilliseconds
         sw.Restart()
-        let try2 = initializedGenerator.GetCachedPrimes() |> takeList 1000
+        let try2 = initializedGenerator.GetCachedPrimes() |> takeList 2000
         let secondTry = sw.ElapsedMilliseconds
 
         ((secondTry * 100L) < firstTry) |> Assert.True
+
+    [<Fact>]
+    member gen.``Initialized generator expects at least two primes``() =
+        let onePrime = [2]
+        let illegalConstruct () = 
+            let na = PrimeCache.Generator(onePrime)
+            ()
+        let error = Record.Exception illegalConstruct
+        Assert.NotNull(error)
+        Assert.IsType(typedefof<System.ArgumentException>, error)

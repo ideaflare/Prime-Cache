@@ -2,32 +2,16 @@
 
 /// Prime number generator
 type Generator private(primes)=
-
-    let rec isPrime test = function 
-        | [] -> true
-        | p :: t -> 
-            if (test % p = 0) then false
-            else isPrime test t
     
-    let rec nextPrime primes test = 
-        seq { 
-            if (isPrime test primes) then 
-                yield test
-                yield! nextPrime (test :: primes) test
-            else yield! nextPrime primes (test + 1)
-        }
-
-    let getPrimes =
-        let lastPrime = primes |> Seq.last
-        seq { 
-            yield! primes
-            yield! nextPrime primes lastPrime
-        }
+    let getPrimes = PrimeGenerator.getPrimes primes
 
     let cachedPrimes = Seq.cache getPrimes
+
+    do if(primes.Length < 2) then 
+        invalidArg "knownPrimes" "Constructor requires at least the first two primes: 2 & 3"
     
     /// Generates prime numbers
-    new() = Generator([ 2 ])
+    new() = Generator([2;3])
 
     /// Initializes prime generator with pre-computed primes
     new(knownPrimes : seq<int>) = Generator(List.ofSeq knownPrimes)

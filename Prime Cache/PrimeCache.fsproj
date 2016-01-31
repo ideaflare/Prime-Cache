@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="PrimeGenerator.fs" />
     <Compile Include="Generator.fs" />
   </ItemGroup>
   <PropertyGroup>

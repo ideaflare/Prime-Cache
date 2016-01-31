@@ -7,13 +7,20 @@ namespace DemoAppCSharp
     {
         static void Main(string[] args)
         {
-            var primeGen1 = new PrimeCache.Generator(new[] { 2 });
-            var na1 = primeGen1.GetPrimes();
+            try
+            {
+                var primeGen1 = new PrimeCache.Generator(new[] { 2 });
+                var na1 = primeGen1.GetPrimes();
+            }
+            catch (System.ArgumentException e)
+            {
+                WriteLine($"Caught expected argerrrr: {e.Message}");
+            }
 
             var primeGen = new PrimeCache.Generator();
 
             var primesUnderThousand = primeGen.GetCachedPrimes()
-                .TakeWhile(x => x < 1000)
+                .TakeWhile(x => x < 100)
                 .ToList();
 
             primesUnderThousand.ForEach(WriteLine);
