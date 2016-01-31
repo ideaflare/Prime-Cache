@@ -69,11 +69,6 @@
       <HintPath>..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <ProjectReference Include="..\Prime Cache\Prime Cache.fsproj">
-      <Name>Prime Cache</Name>
-      <Project>{7c369cae-5cbf-46dc-be33-3738e9fe7f58}</Project>
-      <Private>True</Private>
-    </ProjectReference>
     <Reference Include="xunit.assert">
       <HintPath>..\packages\xunit.assert.2.1.0\lib\dotnet\xunit.assert.dll</HintPath>
       <Private>True</Private>
@@ -86,6 +81,13 @@
       <HintPath>..\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Prime Cache\Prime-Cache.fsproj">
+      <Name>Prime-Cache</Name>
+      <Project>{7c369cae-5cbf-46dc-be33-3738e9fe7f58}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

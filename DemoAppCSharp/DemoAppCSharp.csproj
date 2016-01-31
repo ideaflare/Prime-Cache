@@ -50,9 +50,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Prime Cache\Prime Cache.fsproj">
+    <ProjectReference Include="..\Prime Cache\Prime-Cache.fsproj">
       <Project>{7c369cae-5cbf-46dc-be33-3738e9fe7f58}</Project>
-      <Name>Prime Cache</Name>
+      <Name>Prime-Cache</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
