@@ -7,9 +7,10 @@ namespace DemoAppCSharp
     {
         static void Main(string[] args)
         {
-            var primeGen = new PrimeCache.PrimeSequence();
+            var primeGen = new PrimeCache.Generator();
 
-            var primesUnderThousand = primeGen.GetPrimes()
+            //var primesUnderThousand = primeGen.GetPrimes()
+            var primesUnderThousand = primeGen.GetCachedPrimes()
                 .TakeWhile(x => x < 1000)
                 .ToList();
 
