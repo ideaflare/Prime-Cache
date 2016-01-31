@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Prime-Cache", "Prime Cache\Prime-Cache.fsproj", "{7C369CAE-5CBF-46DC-BE33-3738E9FE7F58}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PrimeCache", "Prime Cache\PrimeCache.fsproj", "{7C369CAE-5CBF-46DC-BE33-3738E9FE7F58}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Tests", "Tests\Tests.fsproj", "{85145632-DD98-446B-9D9B-D43E5AAECBAF}"
 EndProject

@@ -1,8 +1,8 @@
 ﻿namespace PrimeCache
 
-type Generator(knownPrimes : seq<int>) = 
-    let primes = List.ofSeq knownPrimes
-    
+/// Prime number generator
+type Generator private(primes)=
+
     let rec isPrime test = 
         function 
         | [] -> true
@@ -26,7 +26,18 @@ type Generator(knownPrimes : seq<int>) =
         }
     let cachedPrimes = Seq.cache getPrimes
     
+    /// Generates prime numbers
     new() = Generator([ 2 ])
+
+    /// Initializes prime generator with pre-computed primes
+    new(knownPrimes : seq<int>) = Generator(List.ofSeq knownPrimes)
+
+    /// Get generated IEnumerable<int> sequence of prime numbers
     member this.GetPrimes() = getPrimes
+
+    /// <summary>
+    /// Get cached version of GetPrimes()
+    /// <para>Keeps calculated primes in memory instead of re-generating them</para>
+    /// </summary>
     member this.GetCachedPrimes() = cachedPrimes
         
