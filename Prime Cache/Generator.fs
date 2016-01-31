@@ -3,8 +3,7 @@
 /// Prime number generator
 type Generator private(primes)=
 
-    let rec isPrime test = 
-        function 
+    let rec isPrime test = function 
         | [] -> true
         | p :: t -> 
             if (test % p = 0) then false
@@ -24,6 +23,7 @@ type Generator private(primes)=
             yield! primes
             yield! nextPrime primes lastPrime
         }
+
     let cachedPrimes = Seq.cache getPrimes
     
     /// Generates prime numbers
