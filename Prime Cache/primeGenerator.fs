@@ -1,22 +1,26 @@
 ﻿module PrimeGenerator
 
-let rec isPrime test = function 
-        | [] -> true
-        | p :: t -> 
-            if (test % p = 0) then false
-            else isPrime test t
-    
-let rec nextPrime primes test = 
+let isNewPrime test primes = 
+    not (primes |> Seq.exists (fun prime -> test % prime = 0L))
+
+let int64root = float >> sqrt >> int64
+
+let rec nextPrime (primes : ResizeArray<int64>) test = 
     seq { 
-        if (isPrime test primes) then 
+        let testMax = int64root test
+        let testPrimes = primes |> Seq.takeWhile (fun prime -> prime <= testMax)
+
+        if (isNewPrime test testPrimes) then 
             yield test
-            yield! nextPrime (test :: primes) test
-        else yield! nextPrime primes (test + 2)
+            primes.Add(test)
+
+        yield! nextPrime primes (test + 2L)
     }
 
-let getPrimes primes =
+let getPrimes primes = 
     let lastPrime = primes |> Seq.last
+    let knownPrimes = ResizeArray<int64>(primes)
     seq { 
         yield! primes
-        yield! nextPrime primes lastPrime
+        yield! nextPrime knownPrimes (lastPrime + 2L)
     }

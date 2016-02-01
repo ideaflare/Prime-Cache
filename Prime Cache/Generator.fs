@@ -3,7 +3,7 @@
 /// Prime number generator
 type Generator private(primes)=
     
-    let getPrimes = PrimeGenerator.getPrimes primes
+    let getPrimes = PrimeGenerator.getPrimes (primes |> Seq.ofList)
 
     let cachedPrimes = Seq.cache getPrimes
 
@@ -11,10 +11,10 @@ type Generator private(primes)=
         invalidArg "knownPrimes" "Constructor requires at least the first two primes: 2 & 3"
     
     /// Generates prime numbers
-    new() = Generator([2;3])
+    new() = Generator([2L;3L])
 
     /// Initializes prime generator with pre-computed primes
-    new(knownPrimes : seq<int>) = Generator(List.ofSeq knownPrimes)
+    new(knownPrimes : seq<int64>) = Generator(List.ofSeq knownPrimes)
 
     /// Get generated IEnumerable<int> sequence of prime numbers
     member this.GetPrimes() = getPrimes

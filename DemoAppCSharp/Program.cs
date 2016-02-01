@@ -9,7 +9,7 @@ namespace DemoAppCSharp
         {
             try
             {
-                var primeGen1 = new PrimeCache.Generator(new[] { 2 });
+                var primeGen1 = new PrimeCache.Generator(new long[] { 2 });
                 var na1 = primeGen1.GetPrimes();
             }
             catch (System.ArgumentException e)
