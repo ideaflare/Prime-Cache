@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="PrimeSequenceTests.fs" />
+    <Compile Include="FileCacheTests.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
