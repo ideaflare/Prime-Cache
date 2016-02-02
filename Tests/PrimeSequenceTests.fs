@@ -3,46 +3,47 @@
 open Xunit
 
 type GeneratorTests() = 
-    let emptyGenerator = PrimeCache.Generator()
-    let initializedGenerator = PrimeCache.Generator([ 2L; 3L; 5L; 7L ])
     let firstTenPrimes = [ 2L; 3L; 5L; 7L; 11L; 13L; 17L; 19L; 23L; 29L ]
+
+    let emptyGen = PrimeCache.Generator()
+    let initGen = PrimeCache.Generator(firstTenPrimes)
+
+    let takeList x sq = sq |> Seq.truncate x |> List.ofSeq
     
-    let takeList n sequence = 
-        sequence
-        |> Seq.take n
-        |> List.ofSeq
+    let getPrimesFrom (initGen : PrimeCache.Generator) x =
+        initGen.GetPrimes() |> takeList x
     
     [<Fact>]
     member gen.``Empty Generator generates first 10 primes correctly``() = 
-        let generatedPrimes = emptyGenerator.GetPrimes() |> takeList 10
-        firstTenPrimes = generatedPrimes |> Assert.True
+        let generatedPrimes = getPrimesFrom initGen 10
+        Assert.Equal<int64 list>(firstTenPrimes, generatedPrimes)
     
     [<Fact>]
-    member gen.``Initialized Generator generates correctly``() = 
-        let emptyGenerated = emptyGenerator.GetPrimes() |> takeList 20
-        let initGenerated = initializedGenerator.GetPrimes() |> takeList 20
-        emptyGenerated = initGenerated |> Assert.True
+    member gen.``Empty Generator primes are equivalent to Initialized``() =
+        let emptyGenerated = getPrimesFrom emptyGen 100
+        let initGenerated = getPrimesFrom initGen 100
+        Assert.Equal<int64 list>(emptyGenerated, initGenerated)
     
     [<Fact>]
     member gen.``First and Hundreth prime is correct``() = 
-        // first
-        let first = initializedGenerator.GetPrimes() |> Seq.item 0
-        Assert.Equal(2L, first)
-        // 100th
-        let hundredth = initializedGenerator.GetPrimes() |> Seq.item 99
-        Assert.Equal(541L, hundredth)
+        let primes = getPrimesFrom initGen 100
+        Assert.Equal(2L, primes.[0])
+        Assert.Equal(541L,primes.[99])
     
     [<Fact>]
     member gen.``Cached primes are more than 10x faster on sucessive calls``() = 
         let sw = System.Diagnostics.Stopwatch.StartNew()
 
-        let firstCache = initializedGenerator.GetCachedPrimes() |> takeList 20000
+        let preCache = initGen.GetCachedPrimes() |> takeList 2000
         let firstTry = sw.ElapsedMilliseconds
+
         sw.Restart()
-        let try2 = initializedGenerator.GetCachedPrimes() |> takeList 20000
+
+        let postCache = initGen.GetCachedPrimes() |> takeList 2000
         let secondTry = sw.ElapsedMilliseconds
 
-        ((secondTry * 10L) < firstTry) |> Assert.True
+        Assert.Equal<int64 list>(preCache, postCache)
+        Assert.True((secondTry * 10L) < firstTry)  
 
     [<Fact>]
     member gen.``Initialized generator expects at least two primes``() =
@@ -55,11 +56,9 @@ type GeneratorTests() =
         Assert.IsType(typedefof<System.ArgumentException>, error)
 
     [<Fact>]
-    member gen.``Can generate primes under 2mil quicly``() =
-        let max = 2000000L
-        let underMil = 
-            initializedGenerator.GetPrimes()
-            |> Seq.takeWhile ((>) max)
-            |> List.ofSeq
-        let sum = underMil |> List.sumBy bigint
-        Assert.True(max > (List.last underMil))
+    member gen.``Generates primes under 2mil quickly``() =
+        let underMilSum = 
+            initGen.GetPrimes()
+            |> Seq.takeWhile ((>) 2000000L)
+            |> Seq.sum
+        Assert.Equal(142913828922L,underMilSum)
