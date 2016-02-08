@@ -1,28 +1,30 @@
-﻿module PrimeGenerator
+﻿namespace PrimeCache
 
-let int64root = float >> sqrt >> int64
+/// Prime number generator
+type PrimeGenerator private(primes, unit) =
+    
+    let getCachedPrimes = Seq.cache (RollingSieveGenerator.getPrimes primes)
 
-let isNewPrime test primes = 
-        let testMax = int64root test
-        primes 
-        |> Seq.takeWhile (fun prime -> prime <= testMax)
-        |> Seq.exists (fun prime -> test % prime = 0L)
-        |> not
+    let seqLength = 
+        primes
+        |> Seq.truncate 2
+        |> Seq.length
+
+    do if(seqLength < 2 ) then 
+        invalidArg "knownPrimes" "Constructor requires at least the first two primes: 2 & 3"
+    
+    /// Generates prime numbers
+    new() = PrimeGenerator({2L..3L},())
+
+    /// Initializes prime generator with pre-computed primes
+    new(knownPrimes : seq<int64>) = PrimeGenerator(knownPrimes,())
+
+    /// Get generated IEnumerable<int> sequence of prime numbers
+    static member GeneratePrimes() = RollingSieveGenerator.generatePrimes
+
+    /// <summary>
+    /// Get cached version of GetPrimes()
+    /// <para>Keeps calculated primes in memory instead of re-generating them</para>
+    /// </summary>
+    member this.GetCachedPrimes() = getCachedPrimes
         
-let rec nextPrime (primes : ResizeArray<int64>) test = 
-    seq { 
-        if (isNewPrime test primes) then 
-            yield test
-            primes.Add(test)
-        yield! nextPrime primes (test + 2L)
-    }
-
-let getPrimes (primes : seq<int64>) = 
-    let knownPrimes = ResizeArray<int64>(primes)
-    let lastPrime = knownPrimes.[knownPrimes.Count - 1]
-    seq { 
-        yield! primes
-        yield! nextPrime knownPrimes (lastPrime + 2L)
-    }
-
-

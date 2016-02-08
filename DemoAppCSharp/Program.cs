@@ -9,15 +9,15 @@ namespace DemoAppCSharp
         {
             try
             {
-                var primeGen1 = new PrimeCache.Generator(new long[] { 2 });
-                var na1 = primeGen1.GetPrimes();
+                var primeGen1 = new PrimeCache.PrimeGenerator(new long[] { 2 });
+                var na1 = primeGen1.GetCachedPrimes();
             }
             catch (System.ArgumentException e)
             {
                 WriteLine($"Caught expected argerrrr: {e.Message}");
             }
 
-            var primeGen = new PrimeCache.Generator();
+            var primeGen = new PrimeCache.PrimeGenerator();
 
             var primesUnderThousand = primeGen.GetCachedPrimes()
                 .TakeWhile(x => x < 100)
