@@ -2,8 +2,6 @@
 
 /// Prime number generator
 type PrimeGenerator private(primes, unit) =
-    
-    let getCachedPrimes = Seq.cache (RollingSieveGenerator.getPrimes primes)
 
     let seqLength = 
         primes
@@ -12,6 +10,8 @@ type PrimeGenerator private(primes, unit) =
 
     do if(seqLength < 2 ) then 
         invalidArg "knownPrimes" "Constructor requires at least the first two primes: 2 & 3"
+
+    let cachedPrimes = Seq.cache (GeneratorRebuilder.getPrimesLastPrimeUnknown primes)
     
     /// Generates prime numbers
     new() = PrimeGenerator({2L..3L},())
@@ -26,5 +26,4 @@ type PrimeGenerator private(primes, unit) =
     /// Get cached version of GetPrimes()
     /// <para>Keeps calculated primes in memory instead of re-generating them</para>
     /// </summary>
-    member this.GetCachedPrimes() = getCachedPrimes
-        
+    member this.GetCachedPrimes() = cachedPrimes

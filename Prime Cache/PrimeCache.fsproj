@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="RollingSieveGenerator.fs" />
+    <Compile Include="GeneratorRebuilder.fs" />
     <Compile Include="PrimeGenerator.fs" />
   </ItemGroup>
   <PropertyGroup>

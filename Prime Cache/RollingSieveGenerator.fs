@@ -27,28 +27,3 @@ let generatePrimes =
     let lookup = SieveTable()
     seq { 2L..System.Int64.MaxValue }
     |> Seq.filter (isPrime lookup)
-
-let buildPrimes primes lastPrime =
-    let rootLast = int64 (sqrt (float lastPrime))
-    let lookup = SieveTable()
-    let addSquared, addAndUpdate = primes |> List.partition ((<) rootLast)
-    addAndUpdate |> Seq.iter (fun prime ->
-        let key = prime + (prime * (lastPrime / prime))
-        addOrUpdatePrime lookup key prime
-        )
-    addSquared |> Seq.iter (fun prime -> lookup.Add(prime * prime,[prime]))
-    lookup
-
-let getPrimes primes =
-    let knownPrimes = List.ofSeq primes
-    let lastPrime = List.last knownPrimes
-    let fillDictionary = async { return buildPrimes knownPrimes lastPrime }
-    let fillTask = Async.StartAsTask fillDictionary
-    seq { 
-        yield! knownPrimes
-        let lookup = Async.RunSynchronously fillDictionary
-        yield! { (lastPrime + 1L) .. System.Int64.MaxValue }
-               |> Seq.filter(isPrime lookup)
-    }
-
-

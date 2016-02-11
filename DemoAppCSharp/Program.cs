@@ -17,13 +17,15 @@ namespace DemoAppCSharp
                 WriteLine($"Caught expected argerrrr: {e.Message}");
             }
 
-            var primeGen = new PrimeCache.PrimeGenerator();
-
-            var primesUnderThousand = primeGen.GetCachedPrimes()
+            var primesUnder100 = PrimeCache.PrimeGenerator.GeneratePrimes()
                 .TakeWhile(x => x < 100)
                 .ToList();
 
-            primesUnderThousand.ForEach(WriteLine);
+            var primeGen = new PrimeCache.PrimeGenerator(primesUnder100);
+
+            var cachedPrimes = primeGen.GetCachedPrimes().Take(100).ToList();
+
+            primesUnder100.ForEach(WriteLine);
 
             WriteLine("Press any key to exit");
             var na = ReadKey();
