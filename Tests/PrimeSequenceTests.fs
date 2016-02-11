@@ -5,24 +5,33 @@ open Xunit
 type GeneratorTests() = 
     let firstTenPrimes = [ 2L; 3L; 5L; 7L; 11L; 13L; 17L; 19L; 23L; 29L ]
 
+    let takeList x sq = sq |> Seq.truncate x |> List.ofSeq
+
     let emptyGen = PrimeCache.PrimeGenerator.GeneratePrimes
     let initGen = PrimeCache.PrimeGenerator(firstTenPrimes)
-
-    let takeList x sq = sq |> Seq.truncate x |> List.ofSeq
+    let getStaticPrimes x = PrimeCache.PrimeGenerator.GeneratePrimes () |> takeList x
     
     let getPrimesFrom (initGen : PrimeCache.PrimeGenerator) x =
         initGen.GetCachedPrimes() |> takeList x
     
     [<Fact>]
-    member gen.``Empty Generator generates first 10 primes correctly``() = 
-        let generatedPrimes = getPrimesFrom initGen 10
+    member gen.``First 10 primes correctly``() = 
+        let generatedPrimes = getStaticPrimes 10
         Assert.Equal<int64 list>(firstTenPrimes, generatedPrimes)
+
+    [<Fact>]
+    member gen.``Static generation occurs with new sieve each call``() =
+         let generatedPrimes = getStaticPrimes 123
+         let generatedPrimes2 = getStaticPrimes 123
+         Assert.Equal<int64 list>(generatedPrimes, generatedPrimes)
     
     [<Fact>]
-    member gen.``Empty Generator primes are equivalent to Initialized``() =
+    member gen.``Empty & Initialized Generator primes are equivalent to statically generated primes``() =
         let emptyGenerated = emptyGen() |> takeList 100
         let initGenerated = getPrimesFrom initGen 100
+        let staticGenerated = getStaticPrimes 100
         Assert.Equal<int64 list>(emptyGenerated, initGenerated)
+        Assert.Equal<int64 list>(emptyGenerated, staticGenerated)
     
     [<Fact>]
     member gen.``First and Hundreth prime is correct``() = 

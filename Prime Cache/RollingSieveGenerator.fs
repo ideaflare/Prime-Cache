@@ -23,7 +23,7 @@ let isPrime (lookup:SieveTable) number =
             lookup.Add(square, [number])
             true
 
-let generatePrimes =
+let generatePrimes () =
     let lookup = SieveTable()
     seq { 2L..System.Int64.MaxValue }
     |> Seq.filter (isPrime lookup)

@@ -20,7 +20,7 @@ type PrimeGenerator private(primes, unit) =
     new(knownPrimes : seq<int64>) = PrimeGenerator(knownPrimes,())
 
     /// Get generated IEnumerable<int> sequence of prime numbers
-    static member GeneratePrimes() = RollingSieveGenerator.generatePrimes
+    static member GeneratePrimes () = RollingSieveGenerator.generatePrimes ()
 
     /// <summary>
     /// Get cached version of GetPrimes()
