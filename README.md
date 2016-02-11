@@ -1,6 +1,8 @@
 ## Prime-Cache
 Fast Prime number generator for math problems like project Euler.
 
+[NuGet package avaliable here](https://www.nuget.org/packages/PrimeCache/)
+
 ### C# #
 ```csharp
 var primesUnderThousand = PrimeCache.PrimeGenerator.GeneratePrimes()
