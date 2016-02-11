@@ -1,11 +1,9 @@
 ## Prime-Cache
-Simple Prime number generator for math problems like project Euler.
+Fast Prime number generator for math problems like project Euler.
 
 ### C# #
 ```csharp
-var primeGen = new PrimeCache.Generator();
-
-var primesUnderThousand = primeGen.GetPrimes()
+var primesUnderThousand = PrimeCache.PrimeGenerator.GeneratePrimes()
                 .TakeWhile(x => x < 1000)
                 .ToList();
 
@@ -14,12 +12,11 @@ primesUnderThousand.ForEach(Console.WriteLine);
 
 ### F# #
 ```fsharp
-let generator = PrimeCache.Generator()
-let hundredthPrime = generator.GetPrimes() |> Seq.item 99
+let hundredthPrime = PrimeCache.PrimeGenerator.GeneratePrimes () |> Seq.item 99
 ```
 
 ### Functions:
-- GetPrimes(), returns a IEnumerable of prime numbers
+- GeneratePrimes(), returns a IEnumerable of all prime numbers less than 3037000500.
 - GetCachedPrimes(), returns a cached version of GetPrimes(), which is keeps calculated primes in memory instead of re-generating them. 
 
 ### Constructors:
