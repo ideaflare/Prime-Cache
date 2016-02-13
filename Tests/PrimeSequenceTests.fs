@@ -20,10 +20,24 @@ type GeneratorTests() =
         Assert.Equal<int64 list>(firstTenPrimes, generatedPrimes)
 
     [<Fact>]
-    member gen.``Static generation occurs with new sieve each call``() =
-         let generatedPrimes = getStaticPrimes 123
-         let generatedPrimes2 = getStaticPrimes 123
-         Assert.Equal<int64 list>(generatedPrimes, generatedPrimes)
+    member gen.``First and Hundreth prime is correct``() = 
+        let primes = getPrimesFrom initGen 100
+        Assert.Equal(2L, primes.[0])
+        Assert.Equal(541L,primes.[99])
+
+    [<Fact>]
+    member gen.``Sum of all primes under 2mil is correct``() =
+        let primesUnder2MilSum = 
+            initGen.GetCachedPrimes()
+            |> Seq.takeWhile ((>) 2000000L)
+            |> Seq.sum
+        Assert.Equal(142913828922L,primesUnder2MilSum)
+
+    [<Fact>]
+    member gen.``Successive static calls do not interfere with each other``() =
+         let generatedPrimes = getStaticPrimes 1234
+         let generatedPrimes2 = getStaticPrimes 1234
+         Assert.Equal<int64 list>(generatedPrimes, generatedPrimes2)
     
     [<Fact>]
     member gen.``Empty & Initialized Generator primes are equivalent to statically generated primes``() =
@@ -32,27 +46,6 @@ type GeneratorTests() =
         let staticGenerated = getStaticPrimes 100
         Assert.Equal<int64 list>(emptyGenerated, initGenerated)
         Assert.Equal<int64 list>(emptyGenerated, staticGenerated)
-    
-    [<Fact>]
-    member gen.``First and Hundreth prime is correct``() = 
-        let primes = getPrimesFrom initGen 100
-        Assert.Equal(2L, primes.[0])
-        Assert.Equal(541L,primes.[99])
-    
-    [<Fact>]
-    member gen.``Cached primes are more than 10x faster on sucessive calls``() = 
-        let sw = System.Diagnostics.Stopwatch.StartNew()
-
-        let preCache = initGen.GetCachedPrimes() |> takeList 50000
-        let firstTry = sw.ElapsedMilliseconds
-
-        sw.Restart()
-
-        let postCache = initGen.GetCachedPrimes() |> takeList 50000
-        let secondTry = sw.ElapsedMilliseconds
-
-        Assert.Equal<int64 list>(preCache, postCache)
-        Assert.True((secondTry * 10L) < firstTry)  
 
     [<Fact>]
     member gen.``Initialized generator expects at least two primes``() =
@@ -63,11 +56,22 @@ type GeneratorTests() =
         let error = Record.Exception illegalConstruct
         Assert.NotNull(error)
         Assert.IsType(typedefof<System.ArgumentException>, error)
-
+            
     [<Fact>]
-    member gen.``Generates primes under 2mil quickly``() =
-        let underMilSum = 
-            initGen.GetCachedPrimes()
-            |> Seq.takeWhile ((>) 2000000L)
-            |> Seq.sum
-        Assert.Equal(142913828922L,underMilSum)
+    member gen.``Cached primes are more than 10x faster on sucessive calls``() = 
+        let sw = System.Diagnostics.Stopwatch.StartNew()
+
+        let preCache = initGen.GetCachedPrimes() |> takeList 10000
+        let firstTry = sw.ElapsedMilliseconds
+
+        sw.Restart()
+
+        let postCache = initGen.GetCachedPrimes() |> takeList 10000
+        let secondTry = sw.ElapsedMilliseconds
+
+        Assert.Equal<int64 list>(preCache, postCache)
+        Assert.True((secondTry * 10L) < firstTry)  
+
+    
+
+    
