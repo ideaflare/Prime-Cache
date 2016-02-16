@@ -21,9 +21,3 @@ let getPrimesLastPrimeKnown primes lastPrime =
         yield! { (lastPrime + 1L) .. System.Int64.MaxValue }
                |> Seq.filter(isPrime lookup)
     }
-
-let getPrimesLastPrimeUnknown primes =
-    let knownPrimes = List.ofSeq primes
-    let lastPrime = List.last knownPrimes
-    getPrimesLastPrimeKnown knownPrimes lastPrime
-
