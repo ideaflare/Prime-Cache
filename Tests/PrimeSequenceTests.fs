@@ -1,6 +1,7 @@
 ﻿module PrimeSequenceTests
 
 open Xunit
+open System.Diagnostics
 
 type GeneratorTests() = 
     let firstTenPrimes = [ 2L; 3L; 5L; 7L; 11L; 13L; 17L; 19L; 23L; 29L ]
@@ -59,7 +60,7 @@ type GeneratorTests() =
             
     [<Fact>]
     member gen.``Cached primes are more than 10x faster on sucessive calls``() = 
-        let sw = System.Diagnostics.Stopwatch.StartNew()
+        let sw = Stopwatch.StartNew()
 
         let preCache = initGen.GetCachedPrimes() |> takeList 10000
         let firstTry = sw.ElapsedMilliseconds
@@ -71,6 +72,25 @@ type GeneratorTests() =
 
         Assert.Equal<int64 list>(preCache, postCache)
         Assert.True((secondTry * 10L) < firstTry)  
+
+    [<Fact>]
+    member gen.``Rebuilt generator is faster than empty generator``() =
+        let testSize = 10000
+        let generateSize = testSize * 2
+        let primes = getStaticPrimes testSize
+
+        let sw = Stopwatch.StartNew()
+        let generator = PrimeCache.PrimeGenerator(primes)
+        let filledGenerated = generator.GetCachedPrimes() |> takeList generateSize
+        let generatorTime = sw.ElapsedMilliseconds
+
+        sw.Restart()
+        let filledStaticaly = getStaticPrimes generateSize
+        let staticTime = sw.ElapsedMilliseconds
+
+        Assert.True(generatorTime < staticTime)
+        
+
 
     
 
